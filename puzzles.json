@@ -1,0 +1,10 @@
+{
+  "treasure-001": {
+    "question": "What is 2 + 2?",
+    "answer": "4"
+  },
+  "treasure-002": {
+    "question": "What is the capital of France?",
+    "answer": "Paris"
+  }
+}
