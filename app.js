@@ -15,6 +15,7 @@ const chest = document.getElementById('chest');
 navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
   .then(stream => {
     video.srcObject = stream;
+    video.play();
     requestAnimationFrame(scanQR);
   })
   .catch(err => {
@@ -43,20 +44,43 @@ function loadPuzzle(key) {
     puzzleArea.innerHTML = "<p>Unknown QR code.</p>";
     return;
   }
-  puzzleArea.innerHTML = `
-    <p>${puzzle.question}</p>
-    <input type="text" id="answerInput" placeholder="Type answer">
-    <button onclick="checkAnswer('${key}')">Submit</button>
-  `;
+
+  // Clear puzzle area
+  puzzleArea.innerHTML = "";
+
+  // Show question
+  const questionP = document.createElement('p');
+  questionP.textContent = puzzle.question;
+  puzzleArea.appendChild(questionP);
+
+  // Input field
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'answerInput';
+  input.placeholder = "Type answer";
+  puzzleArea.appendChild(input);
+
+  // Feedback element
+  const feedback = document.createElement('p');
+  feedback.id = 'feedbackText';
+  puzzleArea.appendChild(feedback);
+
+  // Submit button
+  const btn = document.createElement('button');
+  btn.textContent = "Submit";
+  btn.onclick = () => checkAnswer(key);
+  puzzleArea.appendChild(btn);
 }
 
 function checkAnswer(key) {
   const input = document.getElementById('answerInput').value.trim();
+  const feedback = document.getElementById('feedbackText');
+
   if (input.toLowerCase() === puzzlesDB[key].answer.toLowerCase()) {
-    puzzleArea.innerHTML = "<p>Correct! Opening chest...</p>";
+    feedback.textContent = "Correct! Opening chest...";
     chest.setAttribute("visible", "true");
   } else {
-    puzzleArea.innerHTML += "<p style='color:red;'>Wrong answer, try again!</p>";
+    feedback.textContent = "Wrong answer, try again!";
   }
 }
 
